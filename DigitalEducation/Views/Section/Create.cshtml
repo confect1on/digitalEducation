@@ -1,0 +1,30 @@
+@model DigitalEducation.Entities.Section
+
+@{
+    ViewData["Title"] = "Создание раздела";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Создание раздела</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="d-lg-block form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group d-lg-block">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<div>
+    <a asp-controller="Section" asp-action="Index">Вернуться к разделам</a>
+</div>
+
