@@ -20,9 +20,9 @@ public class SectionController : Controller
     }
     
     [HttpGet]
-    public async Task<IActionResult> Create(CancellationToken cancellationToken = default)
+    public Task<IActionResult> Create(CancellationToken cancellationToken = default)
     {
-        return View();
+        return Task.FromResult<IActionResult>(View());
     }
     
     [HttpPost]
