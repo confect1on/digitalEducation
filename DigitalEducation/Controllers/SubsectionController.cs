@@ -81,5 +81,14 @@ namespace DigitalEducation.Controllers
                 .Include(s => s.Section)
                 .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
+
+        [HttpGet]
+        public async Task<List<Subsection>> GetSubsectionsBySectionIdAsync(int sectionId,
+            CancellationToken cancellationToken = default)
+        {
+            return await dbContext.Subsections
+                .Where(s => s.SectionId == sectionId)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
