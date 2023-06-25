@@ -1,0 +1,15 @@
+﻿services:
+  digitaleducation:
+    image: digitaleducation
+    build:
+      context: .
+      dockerfile: DigitalEducation/Dockerfile
+  
+  mysql:
+    hostname: digitalEdu-db
+    container_name: digitalEdu-db
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=mypassword
