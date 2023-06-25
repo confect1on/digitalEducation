@@ -103,6 +103,52 @@ namespace DigitalEducation.Migrations
                     b.ToTable("Subsections");
                 });
 
+            modelBuilder.Entity("DigitalEducation.Entities.Theory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("SectionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SubsectionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Theme")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SectionId");
+
+                    b.HasIndex("SubsectionId");
+
+                    b.ToTable("Theory");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.TheoryImageFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ImageFileId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TheoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImageFileId");
+
+                    b.HasIndex("TheoryId");
+
+                    b.ToTable("TheoryImageFiles");
+                });
+
             modelBuilder.Entity("DigitalEducation.Entities.Users.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -330,6 +376,42 @@ namespace DigitalEducation.Migrations
                     b.Navigation("Section");
                 });
 
+            modelBuilder.Entity("DigitalEducation.Entities.Theory", b =>
+                {
+                    b.HasOne("DigitalEducation.Entities.Section", "Section")
+                        .WithMany()
+                        .HasForeignKey("SectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DigitalEducation.Entities.Subsection", "Subsection")
+                        .WithMany()
+                        .HasForeignKey("SubsectionId");
+
+                    b.Navigation("Section");
+
+                    b.Navigation("Subsection");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.TheoryImageFile", b =>
+                {
+                    b.HasOne("DigitalEducation.Entities.ImageFile", "ImageFile")
+                        .WithMany()
+                        .HasForeignKey("ImageFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DigitalEducation.Entities.Theory", "Theory")
+                        .WithMany("TheoryImageFiles")
+                        .HasForeignKey("TheoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ImageFile");
+
+                    b.Navigation("Theory");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("DigitalEducation.Entities.Users.AppRole", null)
@@ -384,6 +466,11 @@ namespace DigitalEducation.Migrations
             modelBuilder.Entity("DigitalEducation.Entities.Section", b =>
                 {
                     b.Navigation("Subsections");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.Theory", b =>
+                {
+                    b.Navigation("TheoryImageFiles");
                 });
 #pragma warning restore 612, 618
         }
