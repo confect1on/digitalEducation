@@ -1,0 +1,22 @@
+﻿@model DigitalEducation.Entities.Trainer
+
+@{
+    ViewData["Title"] = "Тренажер";
+}
+<div>
+    <h1 class="text-primary">Теория</h1>
+    @foreach (var trainerTheory in Model.TrainerTheories)
+    {
+        <div class="row">
+            <div class="col-md-2">
+                <a class="text-primary" 
+                   href=
+                   "@Url.Action("Get", "Theory", new Microsoft.AspNetCore.Routing.RouteValueDictionary(
+                        new {theoryId = trainerTheory.TheoryId}))">
+                    @trainerTheory.Theory?.Theme</a>
+            </div>
+        </div>
+    }
+    <h1 class="text-primary">Практика</h1>
+    @* <a href="@Url.Action("Get", "Problem", new {problemId = Model.ProblemId})"></a> *@
+</div>

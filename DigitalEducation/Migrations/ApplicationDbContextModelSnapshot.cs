@@ -68,6 +68,29 @@ namespace DigitalEducation.Migrations
                     b.ToTable("Problems");
                 });
 
+            modelBuilder.Entity("DigitalEducation.Entities.ProblemWithAnswer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("ProblemId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserAnswer")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProblemId");
+
+                    b.ToTable("ProblemsWithAnswer");
+                });
+
             modelBuilder.Entity("DigitalEducation.Entities.Section", b =>
                 {
                     b.Property<int>("Id")
@@ -119,11 +142,16 @@ namespace DigitalEducation.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("TrainerId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SectionId");
 
                     b.HasIndex("SubsectionId");
+
+                    b.HasIndex("TrainerId");
 
                     b.ToTable("Theory");
                 });
@@ -147,6 +175,37 @@ namespace DigitalEducation.Migrations
                     b.HasIndex("TheoryId");
 
                     b.ToTable("TheoryImageFiles");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.Trainer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProblemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProblemId");
+
+                    b.ToTable("Trainers");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.TrainerTheory", b =>
+                {
+                    b.Property<int>("TheoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TheoryId", "TrainerId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("TrainerTheories");
                 });
 
             modelBuilder.Entity("DigitalEducation.Entities.Users.AppRole", b =>
@@ -365,6 +424,17 @@ namespace DigitalEducation.Migrations
                     b.Navigation("Subsection");
                 });
 
+            modelBuilder.Entity("DigitalEducation.Entities.ProblemWithAnswer", b =>
+                {
+                    b.HasOne("DigitalEducation.Entities.Problem", "Problem")
+                        .WithMany()
+                        .HasForeignKey("ProblemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Problem");
+                });
+
             modelBuilder.Entity("DigitalEducation.Entities.Subsection", b =>
                 {
                     b.HasOne("DigitalEducation.Entities.Section", "Section")
@@ -388,6 +458,10 @@ namespace DigitalEducation.Migrations
                         .WithMany()
                         .HasForeignKey("SubsectionId");
 
+                    b.HasOne("DigitalEducation.Entities.Trainer", null)
+                        .WithMany("TrainerTheories")
+                        .HasForeignKey("TrainerId");
+
                     b.Navigation("Section");
 
                     b.Navigation("Subsection");
@@ -410,6 +484,36 @@ namespace DigitalEducation.Migrations
                     b.Navigation("ImageFile");
 
                     b.Navigation("Theory");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.Trainer", b =>
+                {
+                    b.HasOne("DigitalEducation.Entities.Problem", "Problem")
+                        .WithMany()
+                        .HasForeignKey("ProblemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Problem");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.TrainerTheory", b =>
+                {
+                    b.HasOne("DigitalEducation.Entities.Theory", "Theory")
+                        .WithMany()
+                        .HasForeignKey("TheoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DigitalEducation.Entities.Trainer", "Trainer")
+                        .WithMany()
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Theory");
+
+                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -471,6 +575,11 @@ namespace DigitalEducation.Migrations
             modelBuilder.Entity("DigitalEducation.Entities.Theory", b =>
                 {
                     b.Navigation("TheoryImageFiles");
+                });
+
+            modelBuilder.Entity("DigitalEducation.Entities.Trainer", b =>
+                {
+                    b.Navigation("TrainerTheories");
                 });
 #pragma warning restore 612, 618
         }

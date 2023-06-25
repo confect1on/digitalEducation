@@ -21,6 +21,18 @@ public class ApplicationDbContext : IdentityDbContext<AppUser, AppRole, Guid>, I
     public DbSet<Theory> Theory { get; set; } = default!;
 
     public DbSet<TheoryImageFile> TheoryImageFiles => Set<TheoryImageFile>();
+    
+    public DbSet<ProblemWithAnswer> ProblemsWithAnswer => Set<ProblemWithAnswer>();
+
+    public DbSet<TrainerTheory> TrainerTheories => Set<TrainerTheory>();
+
+    public DbSet<Trainer> Trainers => Set<Trainer>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        builder.Entity<TrainerTheory>().HasKey(t => new { t.TheoryId, t.TrainerId });
+        base.OnModelCreating(builder);
+    }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

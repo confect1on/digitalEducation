@@ -1,0 +1,56 @@
+﻿@model CreateTrainerViewModel
+@{
+    ViewData["Title"] = "Создать тренажер";
+    Layout = "_Layout";
+}
+
+<h1>Создать</h1>
+<hr/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">Раздел</label>
+                <select id="selected-section" class="form-control" asp-for="SectionId"></select>
+                <span asp-validation-for="SectionId" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="IsSubsectionNotSpecified" class="control-label"></label>
+                <input asp-for="IsSubsectionNotSpecified" id="is-subsection-specified" class="form-check" type="checkbox"/>
+                <span asp-validation-for="IsSubsectionNotSpecified" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Подраздел</label>
+                <select id="selected-subsection" class="form-control" asp-for="SubsectionId">
+                    
+                </select>
+                <span asp-validation-for="SubsectionId" class="text-danger"></span>
+            </div>
+            <br/>
+            <div class="form-group">
+                <input class="btn btn-primary" value="Создать тренажер" type="submit"/>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        const selected_subsection = document.getElementById("selected-subsection");
+        const is_subsection_specified = document.getElementById("is-subsection-specified");
+        const selected_section = document.getElementById("selected-section");
+        is_subsection_specified.addEventListener("change", () => {
+            selected_subsection.disabled=!!is_subsection_specified.checked;
+        });
+        selected_section.addEventListener("change", async () => {
+            await replaceSubsections(selected_section, selected_subsection);
+        });
+        (async function(){
+            const sections = await fetchSectionsAsOptionsArray();
+            [...selected_section.options].forEach((o) => selected_section.options.remove(o));
+            sections.forEach(o => selected_section.options.add(o));
+            await replaceSubsections(selected_section, selected_subsection);
+        })();
+    </script>
+}

@@ -54,14 +54,7 @@
     const is_subsection_specified = document.getElementById("is-subsection-specified");
     const selected_section = document.getElementById("selected-section");
     selected_section.addEventListener("change", async () =>{
-        const sectionId = Number(selected_section.value);
-        const response = await 
-            fetch(window.location.origin + `/Subsection/GetSubsectionsBySectionId/?sectionId=${sectionId}`);
-        const json_response = await response.json();
-        const options = [];
-        json_response.forEach(el => options.push(new Option(el.name, el.id)));
-        [...selected_subsection.options].forEach((o) => selected_subsection.options.remove(o));
-        options.forEach(o => selected_subsection.options.add(o))
+        await replaceSubsections(selected_section, selected_subsection)
     })
     is_subsection_specified.addEventListener("change", () => {
         selected_subsection.disabled=!!is_subsection_specified.checked;

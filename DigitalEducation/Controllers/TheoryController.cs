@@ -13,15 +13,15 @@ namespace DigitalEducation.Controllers;
 
 public class TheoryController : Controller
 {
-    private readonly IDbContextFactory<ApplicationDbContext> dbContextFactory;
     private readonly IImageFileStore imageFileStore;
     private readonly ApplicationDbContext dbContext;
+    private readonly ParallelExtension parallelExtension;
 
     public TheoryController(IDbContextFactory<ApplicationDbContext> dbContextFactory, IImageFileStore imageFileStore)
     {
         dbContext = dbContextFactory.CreateDbContext();
-        this.dbContextFactory = dbContextFactory;
         this.imageFileStore = imageFileStore;
+        parallelExtension = new ParallelExtension(dbContextFactory);
     }
 
     public async Task<IActionResult> Index()
@@ -43,8 +43,8 @@ public class TheoryController : Controller
     [HttpGet]
     public async Task<IActionResult> Create(CancellationToken cancellationToken = default)
     {
-        var sectionsTask = GetDataParallel<Section>(cancellationToken);
-        var subsectionsTask = GetDataParallel<Subsection>(cancellationToken);
+        var sectionsTask = parallelExtension.GetDataParallel<Section>(cancellationToken);
+        var subsectionsTask = parallelExtension.GetDataParallel<Subsection>(cancellationToken);
 
         await Task.WhenAll(sectionsTask, subsectionsTask);
         ViewBag.Sections = new SelectList(
@@ -86,9 +86,9 @@ public class TheoryController : Controller
 
     public async Task<IActionResult> ListAsync(CancellationToken cancellationToken = default)
     {
-        var sectionsTask = GetDataParallel<Section>(cancellationToken);
-        var subsectionsTask = GetDataParallel<Subsection>(cancellationToken);
-        var theoriesTask = GetDataParallel<Theory>(cancellationToken);
+        var sectionsTask = parallelExtension.GetDataParallel<Section>(cancellationToken);
+        var subsectionsTask = parallelExtension.GetDataParallel<Subsection>(cancellationToken);
+        var theoriesTask = parallelExtension.GetDataParallel<Theory>(cancellationToken);
 
         await Task.WhenAll(sectionsTask, subsectionsTask, theoriesTask);
         return View(new TheoryListModel
@@ -97,11 +97,5 @@ public class TheoryController : Controller
             Subsections = subsectionsTask.Result,
             Theories = theoriesTask.Result
         });
-    }
-
-    private async Task<List<T>> GetDataParallel<T>(CancellationToken cancellationToken = default) where T: class
-    {
-        await using var context = await dbContextFactory.CreateDbContextAsync(cancellationToken);
-        return await context.Set<T>().ToListAsync(cancellationToken);
     }
 }
