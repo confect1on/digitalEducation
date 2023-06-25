@@ -1,0 +1,73 @@
+@model DigitalEducation.Models.Theory.TheoryCreateViewModel
+
+@{
+    ViewData["Title"] = "Создать";
+}
+
+<h1 xmlns="http://www.w3.org/1999/html">Создать</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FormFileCollection" class="control-label"></label>
+                <input asp-for="FormFileCollection" 
+                       type="file" multiple="multiple" class="form-control" 
+                       accept="image/jpeg"/>
+                <span asp-validation-for="FormFileCollection" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Раздел</label>
+                <select id="selected-section" asp-for="SectionId" class="form-control" asp-items="ViewBag.Sections"></select>
+                <span asp-validation-for="SectionId" class="text-danger"></span>
+            </div>
+            <div>
+                <label asp-for="IsSubsectionNotSpecified" class="control-label"></label>
+                <input asp-for="IsSubsectionNotSpecified" id="is-subsection-specified" class="form-check" type="checkbox"/>
+                <span asp-validation-for="IsSubsectionNotSpecified" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Подраздел</label>
+                <select id="selected-subsection" asp-for="SubsectionId" class="form-control" asp-items="ViewBag.Subsections"></select>
+                <span asp-validation-for="SubsectionId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Создать" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Вернуться к списку</a>
+</div>
+
+<script>
+    const selected_subsection = document.getElementById("selected-subsection");
+    const is_subsection_specified = document.getElementById("is-subsection-specified");
+    const selected_section = document.getElementById("selected-section");
+    selected_section.addEventListener("change", async () =>{
+        const sectionId = Number(selected_section.value);
+        const response = await 
+            fetch(window.location.origin + `/Subsection/GetSubsectionsBySectionId/?sectionId=${sectionId}`);
+        const json_response = await response.json();
+        const options = [];
+        json_response.forEach(el => options.push(new Option(el.name, el.id)));
+        [...selected_subsection.options].forEach((o) => selected_subsection.options.remove(o));
+        options.forEach(o => selected_subsection.options.add(o))
+    })
+    is_subsection_specified.addEventListener("change", () => {
+        selected_subsection.disabled=!!is_subsection_specified.checked;
+    }
+    
+    )
+</script>
+
+

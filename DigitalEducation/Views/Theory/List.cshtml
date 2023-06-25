@@ -1,0 +1,57 @@
+﻿@model TheoryListModel
+
+@{
+    ViewData["Title"] = "Список теории";
+}
+
+
+    @foreach (var bigSection in Model.Sections)
+    {
+        var theoriesOfCurrentSection = Model.Theories
+            .Where(t => t.SectionId == bigSection.Id)
+            .ToList();
+        if (theoriesOfCurrentSection.Count == 0)
+        {
+            continue;
+        }
+        var theoriesWithoutSubsections = theoriesOfCurrentSection
+            .Where(t => t.SubsectionId == null)
+            .ToList();
+        var theoryWithSubsections = theoriesOfCurrentSection
+            .Except(theoriesWithoutSubsections)
+            .ToList();
+        <div>
+            <h2 class="text-lg-start text-primary text-wrap">@bigSection.Name</h2>
+        </div>
+        <div class="d-block">
+            @foreach (var theory in theoriesWithoutSubsections)
+            {
+                <div>
+                    <a class="text-decoration-underline text-primary" 
+                        href="@Url.Action("Get", new {theoryId = theory.Id})">@theory.Theme</a>
+                </div>
+               
+            }
+        </div>
+        var currentSubsections = Model.Subsections.Where(s => s.SectionId == bigSection.Id);
+        foreach (var subsection in currentSubsections)
+        {
+            var theoriesOfCurrentSubsection = theoryWithSubsections
+                .Where(t => t.SubsectionId != null && t.SubsectionId == subsection.Id)
+                .ToList();
+            if (!theoriesOfCurrentSubsection.Any())
+            {
+                continue;
+            }
+            <div>
+                <h4 class="text-md-start text-secondary text-wrap">@subsection.Name</h4>
+            </div>
+            foreach (var theory in theoriesOfCurrentSubsection)
+            {
+                <div>
+                    <a href="@Url.Action("Get", new {theoryId = theory.Id})">@theory.Theme</a>
+                </div>
+            }
+        }
+    }
+      

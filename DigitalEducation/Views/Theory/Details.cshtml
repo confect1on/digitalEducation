@@ -1,0 +1,54 @@
+﻿@using System.Text.Json
+@model DigitalEducation.Entities.Theory
+
+<h1 class="text-center text-primary">@Model.Theme</h1>
+<div class="h-100 d-flex align-items-center justify-content-center">
+    <img
+        id = "theory-img"
+        class="img-responsive img-thumbnail center-block" 
+        src="@Url.Action("GetImageById", "ImageFiles", 
+               new { id = Model.TheoryImageFiles.First().ImageFileId})" 
+        alt="Изображение задания"
+        height="1280"
+        width="720"/>
+</div>
+
+<div class="d-flex justify-content-center mt-5">
+    <button id="btn-back" class="btn btn-primary m-lg-1">Назад</button>
+    <button id="btn-next" class="btn btn-primary m-lg-1">Вперед</button>
+</div>
+<script>
+    let fileIdentifiers = @JsonSerializer.Serialize(Model.TheoryImageFiles
+                                      .Select(t => t.ImageFileId)
+                                      .ToArray())
+    let curIndex = 0;
+    const botIndex = 0;
+    const topIndex = @Model.TheoryImageFiles.Count - 1;
+    const btn_back = document.getElementById("btn-back");
+    btn_back.disabled = true;
+    const img = document.getElementById("theory-img");
+    const btn_next = document.getElementById("btn-next");
+    btn_next.disabled = curIndex === topIndex;
+    btn_back.addEventListener("click", async () => {
+        curIndex -= 1;
+        if (curIndex === botIndex){
+            btn_back.disabled = true;
+        }
+        btn_next.disabled = false;
+        const currentIdentifier = fileIdentifiers[curIndex];
+        await upload_picture(currentIdentifier);
+        
+    });
+    btn_next.addEventListener("click", async () => {
+        curIndex += 1;
+        if (curIndex === topIndex){
+            btn_next.disabled = true;
+        }
+        btn_back.disabled = false;
+        const currentIdentifier = fileIdentifiers[curIndex];
+        await upload_picture(currentIdentifier);
+    });
+    async function upload_picture(picture_id) {
+        img.src = `/imageFiles/GetImageById?id=${picture_id}`;
+    }
+</script>
