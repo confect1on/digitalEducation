@@ -37,7 +37,7 @@ public class LocalDriveImageFileStore : IImageFileStore
         {
             Name = pictureFileName
         };
-        await dbContext.AddAsync(imageFile, cancellationToken);
+        await dbContext.ImageFiles.AddAsync(imageFile, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
         return imageFile;
     }
