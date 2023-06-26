@@ -3,6 +3,25 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Добро пожаловать</h1>
+    <text>Здесь вы сможете подготовится к ЕГЭ.</text>
+    <div class="text-start">
+        <div>
+            <a class="display-6" href="@Url.Action("List", "Theory")">Банк с теорией</a>
+        </div>
+        <div>
+            <text>Это банк теории, разделенный по разделам и подразделам. С ней можно ознакомится в любое время.</text>
+        </div>
+    </div>
+    <div class="text-start">
+        <div>
+            <a class="display-6" href="@Url.Action("Index", "Trainer")">Тренажер</a>
+        </div>
+        <div>
+            <text>
+                Это тренажер, который позволяет вам ознакомится с интересующей 
+                вас теорией и решить случайное задание по выбранному разделу.
+            </text>
+        </div>
+    </div>
 </div>
