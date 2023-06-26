@@ -14,8 +14,9 @@
 </div>
 
 <div class="d-flex justify-content-center mt-5">
-    <button id="btn-back" class="btn btn-primary m-lg-1">Назад</button>
-    <button id="btn-next" class="btn btn-primary m-lg-1">Вперед</button>
+    <button id="btn-back" class="btn btn-primary m-lg-1">К предыдущей</button>
+    <a href="javascript:history.back" id="btn-return" class="btn btn-primary m-lg-1">Назад</a>
+    <button id="btn-next" class="btn btn-primary m-lg-1">К следующей</button>
 </div>
 <script>
     let fileIdentifiers = @JsonSerializer.Serialize(Model.TheoryImageFiles

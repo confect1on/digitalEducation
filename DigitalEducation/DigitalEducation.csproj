@@ -29,7 +29,6 @@
     <ItemGroup>
       <Folder Include="Migrations\" />
       <Folder Include="Views\Idenitity\" />
-      <Folder Include="Views\Problem\" />
       <Folder Include="Views\Section\" />
       <Folder Include="Views\Tests\" />
     </ItemGroup>

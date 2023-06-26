@@ -20,7 +20,9 @@ public class ProblemController : Controller
     /// <summary>
     /// Constructor.
     /// </summary>
-    public ProblemController(ApplicationDbContext dbContext, IImageFileStore imageFileStore)
+    public ProblemController(
+        ApplicationDbContext dbContext,
+        IImageFileStore imageFileStore)
     {
         this.dbContext = dbContext;
         this.imageFileStore = imageFileStore;
@@ -77,10 +79,50 @@ public class ProblemController : Controller
         }
     }
 
-    [HttpGet("{problemId:int}")]
+    [HttpGet("[controller]/{problemId:int}")]
     public async Task<IActionResult> Get(int problemId)
     {
         var problem = await dbContext.Problems.GetAsync(p => p.Id == problemId);
-        return View("Details", problem);
+        var problemViewModel = new ProblemSolvingViewModel
+        {
+            Problem = problem,
+            UserAnswer = ""
+        };
+        return View("Details", problemViewModel);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RegisterAnswer(
+        ProblemSolvingViewModel solvingViewModel,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(solvingViewModel.UserAnswer))
+        {
+            solvingViewModel.UserAnswer = "";
+        }
+        var problemWithAnswer = new ProblemWithAnswer
+        {
+            CreatedAt = DateTimeOffset.Now,
+            ProblemId = solvingViewModel.ProblemId!.Value,
+            UserAnswer = solvingViewModel.UserAnswer.Trim()
+        };
+        await dbContext.ProblemsWithAnswer.AddAsync(problemWithAnswer, cancellationToken);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        return RedirectToAction("GetValidationResult", new RouteValueDictionary(new 
+            { problemWithAnswerId =problemWithAnswer.Id }));
+    }
+
+    public async Task<IActionResult> GetValidationResult(int problemWithAnswerId)
+    {
+        var problemWithAnswer = await dbContext.ProblemsWithAnswer
+            .Include(p => p.Problem)
+            .GetAsync(t => t.Id == problemWithAnswerId);
+        
+        var isAnswerValid = problemWithAnswer.UserAnswer == problemWithAnswer.Problem!.Answer;
+        return View("ValidationResult", new ProblemValidationModel
+        {
+            IsAnswerValid = isAnswerValid,
+            ProblemWithAnswer = problemWithAnswer
+        });
     }
 }

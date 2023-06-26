@@ -1,0 +1,64 @@
+@model ProblemSolvingViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Задача</h1>
+<hr/>
+<div>
+    <div class="form-control m-2">
+        <text>@Model.Problem.Question</text>
+    </div>
+    @if (Model.Problem.ProblemImageFileId is not null)
+    {
+        <div class="form-control m-2">
+            <img
+                id="theory-img"
+                class="img-responsive img-thumbnail center-block"
+                src="@Url.Action("Get", "ImageFiles", new { id = Model.Problem.ProblemImageFileId })"
+                alt="Изображение задания"
+                height="1280"
+                width="720"/>
+        </div>
+    }
+    <div class="m-2">
+        <form method="post" asp-action="RegisterAnswer">
+            <input asp-for="ProblemId" type="hidden" value="@Model.Problem.Id"/>
+            <div class="form-group">
+                <label asp-for="UserAnswer" class="label-control"></label>
+                <input asp-for="UserAnswer" class="form-control"/>
+                <span asp-validation-for="UserAnswer" class="text-danger"></span>
+            </div>
+            <div class="form-group m-2">
+                <input class="btn btn-primary" value="Подтвердить ответ" type="submit"/>
+            </div>
+        </form>
+    </div>
+    @if (Model.Problem.HintImageFileId is not null)
+    {
+        <div id="tip-div" class="m-2">
+            <button id="tip-button" type="button" class="btn btn-warning">Показать подсказку</button>
+        </div>
+    }
+    
+</div>
+@section Scripts
+{
+    <script>
+        let isTipShowed = false;
+        const tipButton = document.getElementById('tip-button');
+        tipButton.addEventListener('click', () => {
+            if (isTipShowed){
+                return;
+            }
+            const tipDiv = document.getElementById('tip-div');
+            tipDiv.insertAdjacentHTML('afterend', '<div class="form-control m-2"><img id="theory-img" ' +
+             'class="img-responsive img-thumbnail center-block" ' +
+             'src="@Url.Action("Get", "ImageFiles", new { id = Model.Problem.HintImageFileId })"' +
+             'alt="Изображение задания"height="1280"width="720"/></div>');
+            isTipShowed = true;
+            tipButton.disabled = false;
+        });
+    </script>
+}

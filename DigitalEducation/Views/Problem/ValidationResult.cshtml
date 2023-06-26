@@ -1,0 +1,43 @@
+﻿@model ProblemValidationModel
+
+@{
+    ViewData["Title"] = "Результат";
+}
+<text class="text-center display-5">Результат</text>
+<hr/>
+<div class="m-2">
+    <div class="form-control m-2">
+        @if (Model.IsAnswerValid)
+        {
+            <div>
+                <text class="display-6 text-center text-success">Вы ответили правильно</text>
+            </div>
+        }
+        else
+        {
+            <div>
+                <text class="text-secondary">Ваш ответ отличается от правильного</text>
+            </div>
+            <div>
+                <text class="text-success">Правильный ответ: @Model.ProblemWithAnswer.Problem!.Answer</text>
+            </div>
+            <div>
+                <text class="text-danger">Ваш ответ: @Model.ProblemWithAnswer.UserAnswer</text>
+            </div>
+        }
+    </div>
+    <div class="m-2 form-control">
+        <a class="btn-primary btn" href=@Url.Action("Index", "Home")>Покинуть страницу</a>
+    </div>
+</div>
+<text class="text-center display-5">Решение автора</text>
+<hr/>
+<div class="form-control m-2">
+    <img
+            id="theory-img"
+            class="img-responsive img-thumbnail center-block"
+            src="@Url.Action("Get", "ImageFiles", new { id = Model.ProblemWithAnswer.Problem!.SolutionImageFileId })"
+            alt="Изображение задания"
+            height="1280"
+            width="720"/>
+</div>
