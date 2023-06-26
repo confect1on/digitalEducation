@@ -20,9 +20,9 @@ public class SectionController : Controller
     }
     
     [HttpGet]
-    public Task<IActionResult> Create(CancellationToken cancellationToken = default)
+    public IActionResult New()
     {
-        return Task.FromResult<IActionResult>(View());
+        return View();
     }
     
     [HttpPost]
@@ -30,7 +30,7 @@ public class SectionController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View();
+            return View("New");
         }
 
         await dbContext.Sections.AddAsync(section);

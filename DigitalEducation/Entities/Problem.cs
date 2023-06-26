@@ -22,6 +22,11 @@ public class Problem
     
     [DisplayName("Файл решения")]
     public ImageFile? SolutionImageFile { get; set; }
+    
+    public int? HintImageFileId { get; set; }
+    
+    [DisplayName("Файл подсказки")]
+    public ImageFile? HintImageFile { get; set; }
 
     [DisplayName("ID Подраздела")]
     public int SubsectionId { get; set; }

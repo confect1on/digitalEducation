@@ -11,21 +11,14 @@ namespace DigitalEducation.Controllers;
 public class TrainerController : Controller
 {
     private readonly IDbContextFactory<ApplicationDbContext> dbContextFactory;
-    private readonly ParallelExtension parallelExtension;
+
     public TrainerController(IDbContextFactory<ApplicationDbContext> dbContextFactory)
     {
         this.dbContextFactory = dbContextFactory;
-        parallelExtension = new ParallelExtension(dbContextFactory);
     }
-    public async Task<IActionResult> IndexAsync(CancellationToken cancellationToken = default)
+
+    public async Task<IActionResult> IndexAsync()
     {
-        // var sectionTask = parallelExtension.GetDataParallel<Section>(cancellationToken);
-        // var subsectionTask = parallelExtension.GetDataParallel<Subsection>(cancellationToken);
-        // await Task.WhenAll(sectionTask, subsectionTask);
-        // ViewBag.Sections = new SelectList(sectionTask.Result, "Id", "Name");
-        // ViewBag.Subsections = new SelectList(subsectionTask.Result
-        //         .Where(s => s.SectionId == sectionTask.Result.FirstOrDefault()?.Id), 
-        //     "Id", "Name");
         return View();
     }
 

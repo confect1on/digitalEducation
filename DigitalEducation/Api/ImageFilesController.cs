@@ -1,9 +1,11 @@
 ﻿using DigitalEducation.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DigitalEducation.Controllers;
+namespace DigitalEducation.Api;
 
-public class ImageFilesController : Controller
+[ApiController]
+[Route("api/[controller]")]
+public class ImageFilesController : ControllerBase
 {
     private readonly IImageFileStore imageFileStore;
 
@@ -12,7 +14,8 @@ public class ImageFilesController : Controller
         this.imageFileStore = imageFileStore;
     }
 
-    public async Task<FileResult> GetImageByIdAsync(int id, CancellationToken cancellationToken = default)
+    [HttpGet]
+    public async Task<FileResult> GetAsync(int id, CancellationToken cancellationToken = default)
     {
         var bytes = await imageFileStore.GetFileBytesAsync(id, cancellationToken);
         var base64String = Convert.ToBase64String(bytes);

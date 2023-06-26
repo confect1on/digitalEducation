@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Saritasa.Tools.EFCore;
 
 namespace DigitalEducation.Controllers;
 
@@ -47,18 +48,23 @@ public class ProblemController : Controller
     {
         try
         {
-            var picturePath = problemViewModel.Picture is not null ?
-                await imageFileStore.SaveFileAsync(problemViewModel.Picture.OpenReadStream(), cancellationToken)
+            var pictureImageFile = problemViewModel.Picture is not null 
+                ? await imageFileStore.SaveFileAsync(problemViewModel.Picture.OpenReadStream(), cancellationToken)
                 : null;
-            var solutionPicturePath = 
+            var solutionImageFile = 
                 await imageFileStore.SaveFileAsync(problemViewModel.SolutionPicture.OpenReadStream(), cancellationToken);
+            var hintImageFile = problemViewModel.HintPicture is not null
+                ? await imageFileStore.SaveFileAsync(problemViewModel.HintPicture.OpenReadStream(), cancellationToken)
+                : null;
+
             var problem = new Problem
             {
                 Answer = problemViewModel.Answer,
-                ProblemImageFile = picturePath,
+                ProblemImageFile = pictureImageFile,
                 Question = problemViewModel.Question,
                 SubsectionId = problemViewModel.SubsectionId,
-                SolutionImageFile = solutionPicturePath
+                SolutionImageFile = solutionImageFile,
+                HintImageFile = hintImageFile
             };
             await dbContext.Problems.AddAsync(problem, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
@@ -69,5 +75,12 @@ public class ProblemController : Controller
             ModelState.AddModelError("exception", e.Message);
             return View("Index");
         }
+    }
+
+    [HttpGet("{problemId:int}")]
+    public async Task<IActionResult> Get(int problemId)
+    {
+        var problem = await dbContext.Problems.GetAsync(p => p.Id == problemId);
+        return View("Details", problem);
     }
 }

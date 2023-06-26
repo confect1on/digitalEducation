@@ -37,6 +37,13 @@
 @section Scripts
 {
     <script>
+        function clearCheckBoxes() {
+            const inputs = document.getElementsByTagName("input");
+            for (let i = 0; i < inputs.length; i++){
+                if (inputs[i].type === 'checkbox')
+                    inputs[i].checked = false;
+            }
+        }
         const selected_subsection = document.getElementById("selected-subsection");
         const is_subsection_specified = document.getElementById("is-subsection-specified");
         const selected_section = document.getElementById("selected-section");

@@ -1,7 +1,7 @@
 @model DigitalEducation.Models.Problem.ProblemViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Создание задания";
 }
 
 <h1>Создание задания</h1>
@@ -34,6 +34,11 @@
                 <label asp-for="SolutionPicture" class="control-label"></label>
                 <input asp-for="SolutionPicture" type="file" class="form-control" accept="image/png, image/jpeg">
                 <span asp-validation-for="SolutionPicture" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HintPicture" class="control-label"></label>
+                <input asp-for="HintPicture" type="file" class="form-control" accept="image/jpeg, image/png"/>
+                <span asp-validation-for="HintPicture" class="text-danger"></span>
             </div>
             <br/>
             <div class="form-group">

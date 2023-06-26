@@ -1,4 +1,4 @@
-@model List<DigitalEducation.Entities.Section>
+@model IEnumerable<DigitalEducation.Entities.Section>
 
 @{
     ViewData["Title"] = "Разделы";
@@ -8,15 +8,17 @@
 <h1>Разделы</h1>
 
 <p>
-    <a asp-controller="Section" asp-action="Create">Создать новый раздел</a>
+    <a asp-controller="Section" asp-action="New">Создать новый раздел</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model[0].Name)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +26,9 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
             </td>
             <td>
                 <a asp-controller="Section" asp-action="Delete" asp-route-id="@item.Id">Удалить</a>

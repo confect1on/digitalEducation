@@ -26,6 +26,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.SolutionImageFile)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HintImageFile)
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -39,7 +42,7 @@
                 {
                     <img 
                         class="img-thumbnail" 
-                        src="@Url.Action("GetImageById", "ImageFiles", 
+                        src="@Url.Action("Get", "ImageFiles", 
                                  new { id = item.ProblemImageFileId})" 
                         alt="Изображение задания"
                         height="200"
@@ -58,10 +61,26 @@
             </td>
             <td>
                 <img class="img-thumbnail" 
-                     src="@Url.Action("GetImageById", "ImageFiles", new { id = item.SolutionImageFileId})" 
-                     alt="Изображение задания"
+                     src="@Url.Action("Get", "ImageFiles", new { id = item.SolutionImageFileId})" 
+                     alt="Изображение решения"
                      height="200"
                      width="200"/>
+            </td>
+            <td>
+                @if (item.HintImageFileId is not null)
+                {
+                    <img 
+                        class="img-thumbnail" 
+                        src="@Url.Action("Get", "ImageFiles", 
+                                 new { id = item.HintImageFileId})" 
+                        alt="Изображение подсказки"
+                        height="200"
+                        width="200"/>
+                }
+                else
+                {
+                    <text>Не указано</text>
+                }
             </td>
             <td>
                 @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@

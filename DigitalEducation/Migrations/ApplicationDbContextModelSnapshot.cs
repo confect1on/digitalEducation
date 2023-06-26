@@ -44,6 +44,9 @@ namespace DigitalEducation.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("HintImageFileId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ProblemImageFileId")
                         .HasColumnType("int");
 
@@ -58,6 +61,8 @@ namespace DigitalEducation.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HintImageFileId");
 
                     b.HasIndex("ProblemImageFileId");
 
@@ -101,6 +106,9 @@ namespace DigitalEducation.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Sections");
@@ -142,16 +150,11 @@ namespace DigitalEducation.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("TrainerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SectionId");
 
                     b.HasIndex("SubsectionId");
-
-                    b.HasIndex("TrainerId");
 
                     b.ToTable("Theory");
                 });
@@ -401,6 +404,10 @@ namespace DigitalEducation.Migrations
 
             modelBuilder.Entity("DigitalEducation.Entities.Problem", b =>
                 {
+                    b.HasOne("DigitalEducation.Entities.ImageFile", "HintImageFile")
+                        .WithMany()
+                        .HasForeignKey("HintImageFileId");
+
                     b.HasOne("DigitalEducation.Entities.ImageFile", "ProblemImageFile")
                         .WithMany()
                         .HasForeignKey("ProblemImageFileId");
@@ -416,6 +423,8 @@ namespace DigitalEducation.Migrations
                         .HasForeignKey("SubsectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("HintImageFile");
 
                     b.Navigation("ProblemImageFile");
 
@@ -457,10 +466,6 @@ namespace DigitalEducation.Migrations
                     b.HasOne("DigitalEducation.Entities.Subsection", "Subsection")
                         .WithMany()
                         .HasForeignKey("SubsectionId");
-
-                    b.HasOne("DigitalEducation.Entities.Trainer", null)
-                        .WithMany("TrainerTheories")
-                        .HasForeignKey("TrainerId");
 
                     b.Navigation("Section");
 
@@ -506,7 +511,7 @@ namespace DigitalEducation.Migrations
                         .IsRequired();
 
                     b.HasOne("DigitalEducation.Entities.Trainer", "Trainer")
-                        .WithMany()
+                        .WithMany("TrainerTheories")
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -6,8 +6,8 @@
     <img
         id = "theory-img"
         class="img-responsive img-thumbnail center-block" 
-        src="@Url.Action("GetImageById", "ImageFiles", 
-               new { id = Model.TheoryImageFiles.First().ImageFileId})" 
+        src="@Url.Action("Get", "ImageFiles", 
+                 new { id = Model.TheoryImageFiles.First().ImageFileId})" 
         alt="Изображение задания"
         height="1280"
         width="720"/>

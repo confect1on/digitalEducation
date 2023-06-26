@@ -26,4 +26,7 @@ public class ProblemViewModel
     [Required]
     [DisplayName("ID Подраздела")]
     public int SubsectionId { get; set; }
+    
+    [DisplayName("Подсказка")]
+    public IFormFile? HintPicture { get; set; }
 }

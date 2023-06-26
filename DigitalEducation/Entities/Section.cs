@@ -10,4 +10,7 @@ public class Section
     required public string Name { get; set; }
 
     public ICollection<Subsection> Subsections { get; set; } = new List<Subsection>();
+    
+    [DisplayName("Порядковый номер")]
+    public int Priority { get; set; }
 }
