@@ -14,7 +14,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySQL(connectionString));
-
 // builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options => options.UseMySQL(connectionString), ServiceLifetime.Scoped);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -53,5 +52,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
-app.Run();
+using var serviceScope = app.Services.CreateScope();
+var applicationDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+await applicationDbContext.Database.MigrateAsync();
+await app.RunAsync();
