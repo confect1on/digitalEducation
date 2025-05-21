@@ -6,7 +6,11 @@
 - **MySQL**: реляционная база данных для хранения информации
 - **Docker**: для развертывания локального окружения
 
-![Dependencies Graph from Aspire](images/AspireServices.png)
+---
+## GUI
+![Создание раздела](images/create_section.png)
+![Создание_подраздела](images/create_subsection.png)
+![Список_заданий](images/tasks_list.png)
 ---
 
 ## Функциональность
